@@ -1,0 +1,35 @@
+# TS
+.venv/
+venv/
+.env
+
+# Logs
+*.log
+*.tmp
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# sqlite
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+data/
+*.sqlite-wal
+*.sqlite-shm
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+node_modules
+
+# project docs
+docs/

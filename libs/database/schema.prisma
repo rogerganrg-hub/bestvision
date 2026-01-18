@@ -1,0 +1,84 @@
+// This is your Prisma schema file
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+// 1. 机构 (Firm) - 顶层实体
+model Firm {
+    id        String    @id @default(uuid())
+    name      String
+    domain    String?   @unique
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    advisors  Advisor[]
+    clients   Client[]
+}
+
+// 2. 顾问 (Advisor) - 管理员/操作员
+model Advisor {
+    id       String      @id @default(uuid())
+    email    String      @unique
+    password String // 存储 Hashed password
+    name     String
+    role     AdvisorRole @default(STANDARD)
+
+    firmId String
+    firm   Firm   @relation(fields: [firmId], references: [id])
+
+    clients   Client[]
+    createdAt DateTime @default(now())
+}
+
+enum AdvisorRole {
+    SUPER_ADMIN // 机构主账号
+    STANDARD // 普通顾问
+}
+
+// 3. 客户 (Client) - 终端投资者
+model Client {
+    id    String @id @default(uuid())
+    email String @unique
+    name  String
+
+    firmId String
+    firm   Firm   @relation(fields: [firmId], references: [id])
+
+    advisorId String?
+    advisor   Advisor? @relation(fields: [advisorId], references: [id])
+
+    plaidItems PlaidItem[]
+    createdAt  DateTime    @default(now())
+}
+
+// 4. Plaid 账户连接信息
+model PlaidItem {
+    id            String @id @default(uuid())
+    accessToken   String @unique
+    itemId        String @unique
+    institutionId String
+    status        String // e.g., "ACTIVE", "ERROR"
+
+    clientId String
+    client   Client @relation(fields: [clientId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// 5. 审计日志 (Audit Log)
+model AuditLog {
+    id         String   @id @default(uuid())
+    action     String // e.g., "LOGIN", "DATA_EXPORT", "PLAID_LINK"
+    entityType String // e.g., "CLIENT", "ADVISOR"
+    entityId   String
+    actorId    String // 执行操作的用户 ID
+    payload    Json? // 详细变更数据
+    ipAddress  String?
+    createdAt  DateTime @default(now())
+}
