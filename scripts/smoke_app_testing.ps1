@@ -83,6 +83,37 @@ $listResp = Invoke-WebRequest `
 $listRid = Get-RequestIdFromHeaders $listResp.Headers
 $listJson = $listResp.Content | ConvertFrom-Json
 
+# 4) Audit Failure Drill (AUDIT_FORCE_FAIL=1, business must NOT be blocked)
+Write-Host ""
+Write-Host "== Audit Failure Drill (AUDIT_FORCE_FAIL=1, business must NOT be blocked) =="
+
+# 失败演练需要后端以 AUDIT_FORCE_FAIL=1 启动。
+# 为避免误判，先通过 debug endpoint 读取后端当前状态；未开启则跳过演练。
+$auditDbg = Invoke-RestMethod -Method GET -Uri "$BaseUrl/api/v1/debug/audit"
+if (-not $auditDbg.auditForceFail) {
+  Write-Host "SKIP: AUDIT_FORCE_FAIL is NOT enabled on backend."
+  Write-Host "      Restart backend with AUDIT_FORCE_FAIL=1, then re-run smoke test to execute the drill."
+  Write-Host "      Example (PowerShell): `$env:AUDIT_FORCE_FAIL='1' ; <start-backend>"
+  Write-Host ""
+} else {
+  Write-Host "Backend reports AUDIT_FORCE_FAIL=1. Running drill..."
+
+  $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+  $DrillScript = Join-Path $RepoRoot "apps\backend\scripts\audit_failure_drill.mjs"
+  if (-not (Test-Path $DrillScript)) {
+    throw "Missing drill script: $DrillScript"
+  }
+  
+  Write-Host "[D1] node $DrillScript"
+  $p = Start-Process -FilePath "node" -ArgumentList @("$DrillScript") -NoNewWindow -PassThru -Wait -Environment @{ BACKEND_BASE = $BaseUrl }
+  if ($p.ExitCode -ne 0) {
+    throw "Audit failure drill FAILED (exit code $($p.ExitCode)). Check backend console for 'audit_write_failed'."
+  }
+  Write-Host "Audit failure drill PASS."
+  Write-Host ""
+}
+
+# Continue LIST test output
 Write-Host "  HTTP: $($listResp.StatusCode)"
 Write-Host "  rid : $listRid"
 Write-Host "  body: $($listResp.Content)"

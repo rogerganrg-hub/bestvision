@@ -1,4 +1,5 @@
 // apps/backend/server.js
+import "dotenv/config";
 import express from "express";
 import { v1Router } from "./routes/v1.js";
 import { createAppCtx } from "./src/ctx/app_ctx.js";

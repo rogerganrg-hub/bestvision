@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "audit:check": "node ./scripts/audit_min_query.mjs"
   },
   "keywords": [],
   "author": "",
@@ -18,8 +19,10 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "dotenv": "^17.2.3",
     "express": "^5.2.1",
-    "sqlite3": "^5.1.7",
+    "plaid": "^41.0.0",
+    "sqlite3": "^5.0.2",
     "ts-morph": "^27.0.2"
   }
 }

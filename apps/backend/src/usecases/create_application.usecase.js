@@ -141,6 +141,9 @@ class CreateApplicationUseCaseImpl {
 
 // ✅ 维持 0004 的函数式 UseCase 语义：routes 继续调用 CreateApplicationUseCase(ctx, body)
 export async function CreateApplicationUseCase(ctx, input) {
+  if (process.env.DEBUG_AUDIT === "1") {
+    ctx?.logger?.info?.("uc_entry_create_application_wrapper", { hasAuditSink: !!ctx?.auditSink });
+  }
   const appRepo = ctx?.repos?.application;
   if (!appRepo) {
     throw new Error("ctx.repos.application missing");
