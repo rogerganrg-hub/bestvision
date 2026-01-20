@@ -47,8 +47,9 @@ docs/
 /coverage
 
 # next.js
-/.next/
-/out/
+**/.next/
+**/out/
+.next/
 
 # production
 /build
