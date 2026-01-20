@@ -1,10 +1,10 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
     args:
-      ["build", "-t", "${_IMAGE}", "-f", "apps/frontend/Dockerfile", "."]
+      ["build", "-t", "${_IMAGE}", "-f", "apps/web/Dockerfile", "."]
 images:
   - "${_IMAGE}"
 substitutions:
-  _IMAGE: "REGION-docker.pkg.dev/PROJECT_ID/bestvision/frontend:stg"
+  _IMAGE: "REGION-docker.pkg.dev/PROJECT_ID/bestvision/web:stg"
 options:
   logging: CLOUD_LOGGING_ONLY

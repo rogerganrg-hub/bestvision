@@ -1,20 +1,19 @@
 {
   "name": "bestvision",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:backend": "pnpm -C apps/backend dev",
-    "dev:frontend": "pnpm -C apps/frontend/app dev",
-    "dev": "pnpm dev:backend && pnpm dev:frontend"
+    "dev:api": "pnpm --filter @bestvision/api dev",
+    "dev:web": "pnpm --filter @bestvision/web dev",
+    "dev": "pnpm dev:api && pnpm dev:web"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "BestVisionPlatform/RogerGan",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
   "packageManager": "pnpm@10.28.0",
-  "dependencies": {
-    "better-sqlite3": "^12.6.0",
-    "react-plaid-link": "^4.1.1"
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

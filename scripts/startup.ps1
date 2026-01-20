@@ -6,9 +6,9 @@
 cd D:\bestvision\infra
 docker compose up -d
 docker ps
-# launch backend dev
+# launch api dev
 cd D:\bestvision
-pnpm -w run dev:backend
+pnpm -w run dev:api
 # launch all dev
 cd D:\bestvision
 pnpm -w run dev

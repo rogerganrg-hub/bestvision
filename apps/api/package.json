@@ -1,0 +1,30 @@
+{
+  "name": "@bestvision/api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "node server.js",
+    "audit:check": "node ./scripts/audit_min_query.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.28.0",
+  "devDependencies": {
+    "@types/node": "^25.0.8",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "plaid": "^41.0.0",
+    "sqlite3": "^5.0.2",
+    "ts-morph": "^27.0.2",
+    "better-sqlite3": "^12.6.0"
+  }
+}

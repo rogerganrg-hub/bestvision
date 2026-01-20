@@ -1,0 +1,4 @@
+{
+  "/apply/page": "app/apply/page.js",
+  "/integrations/plaid/page": "app/integrations/plaid/page.js"
+}
