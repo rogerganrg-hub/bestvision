@@ -1,6 +1,8 @@
 // apps/api/routes/v1.ts
 import express, { type Request, type Response } from "express";
 import crypto from "node:crypto";
+import { ErrorType } from "@bestvision/contracts";
+// import { ErrorTypeUnion } from "@bestvision/contracts";
 
 import { CreateApplicationUseCase } from "../src/usecases/create-application.usecase.js";
 import { getApplication } from "../src/usecases/get-application.usecase.js";
@@ -20,15 +22,14 @@ function withMeta<T extends object>(req: Request, res: Response, obj: T): T & Ap
 
 v1Router.post("/applications", async (req: Request, res: Response) => {
   const ctx = req.ctx;
-
   try {
     const result = await CreateApplicationUseCase(ctx, req.body);
 
-    if (!result.ok && result.error === "validation_error") {
+    if (!result.ok && result.error === ErrorType.ValidationError) {
       return res.status(400).json(
         withMeta(req, res, {
           ok: false as const,
-          error: "validation_error" as const,
+          error: ErrorType.ValidationError,
           fields: result.fields,
           version: "v1" as const,
         })
@@ -39,7 +40,7 @@ v1Router.post("/applications", async (req: Request, res: Response) => {
       return res.status(500).json(
         withMeta(req, res, {
           ok: false as const,
-          error: "internal_error" as const,
+          error: ErrorType.InternalError,
           version: "v1" as const,
         })
       );
@@ -61,7 +62,7 @@ v1Router.post("/applications", async (req: Request, res: Response) => {
     return res.status(500).json(
       withMeta(req, res, {
         ok: false as const,
-        error: "internal_error" as const,
+        error: ErrorType.InternalError,
         version: "v1" as const,
       })
     );
@@ -88,7 +89,7 @@ v1Router.post("/integrations/plaid/link-token", async (req: Request, res: Respon
     const plaidClient = ctx.plaidClient;
     if (!ctx.integrations.plaid.configured || !plaidClient?.client) {
       return res.status(400).json(
-        withMeta(req, res, { ok: false as const, error: "plaid_not_configured" as const, version: "v1" as const })
+        withMeta(req, res, { ok: false as const, error: ErrorType.PlaidNotConfigured, version: "v1" as const })
       );
     }
 
@@ -133,12 +134,12 @@ v1Router.post("/integrations/plaid/link-token", async (req: Request, res: Respon
         resourceType: "plaid_link_token",
         resourceId: "n/a",
         result: "failure",
-        reasonCode: "plaid_error",
+        reasonCode: ErrorType.PlaidError,
       };
       await ctx.auditSink?.write(ev);
     } catch {}
 
-    return res.status(500).json(withMeta(req, res, { ok: false as const, error: "internal_error" as const, version: "v1" as const }));
+    return res.status(500).json(withMeta(req, res, { ok: false as const, error: ErrorType.InternalError, version: "v1" as const }));
   }
 });
 
@@ -147,7 +148,7 @@ v1Router.post("/integrations/plaid/exchange", async (req: Request, res: Response
 
   try {
     if (!ctx.integrations?.plaid?.configured || !ctx.plaidClient?.client) {
-      return res.status(400).json(withMeta(req, res, { ok: false as const, error: "plaid_not_configured" as const, version: "v1" as const }));
+      return res.status(400).json(withMeta(req, res, { ok: false as const, error: ErrorType.PlaidNotConfigured, version: "v1" as const }));
     }
 
     const publicToken = (req.body as { public_token?: string } | undefined)?.public_token;
@@ -155,7 +156,7 @@ v1Router.post("/integrations/plaid/exchange", async (req: Request, res: Response
       return res.status(400).json(
         withMeta(req, res, {
           ok: false as const,
-          error: "validation_error" as const,
+          error: ErrorType.ValidationError,
           fields: { public_token: "required" },
           version: "v1" as const,
         })
@@ -197,11 +198,11 @@ v1Router.post("/integrations/plaid/exchange", async (req: Request, res: Response
         resourceType: "plaid_item",
         resourceId: "n/a",
         result: "failure",
-        reasonCode: "plaid_error",
+        reasonCode: ErrorType.PlaidError,
       });
     } catch {}
 
-    return res.status(500).json(withMeta(req, res, { ok: false as const, error: "internal_error" as const, version: "v1" as const }));
+    return res.status(500).json(withMeta(req, res, { ok: false as const, error: ErrorType.InternalError, version: "v1" as const }));
   }
 });
 
@@ -210,7 +211,7 @@ v1Router.get("/integrations/plaid/accounts", async (req: Request, res: Response)
 
   try {
     if (!ctx.integrations?.plaid?.configured || !ctx.plaidClient?.client) {
-      return res.status(400).json(withMeta(req, res, { ok: false as const, error: "plaid_not_configured" as const, version: "v1" as const }));
+      return res.status(400).json(withMeta(req, res, { ok: false as const, error: ErrorType.PlaidNotConfigured, version: "v1" as const }));
     }
 
     const itemId = req.query.item_id;
@@ -218,7 +219,7 @@ v1Router.get("/integrations/plaid/accounts", async (req: Request, res: Response)
       return res.status(400).json(
         withMeta(req, res, {
           ok: false as const,
-          error: "validation_error" as const,
+          error: ErrorType.ValidationError,
           fields: { item_id: "required" },
           version: "v1" as const,
         })
@@ -227,7 +228,7 @@ v1Router.get("/integrations/plaid/accounts", async (req: Request, res: Response)
 
     const item = await ctx.repos.plaidItem.getById(String(itemId));
     if (!item) {
-      return res.status(404).json(withMeta(req, res, { ok: false as const, error: "not_found" as const, version: "v1" as const }));
+      return res.status(404).json(withMeta(req, res, { ok: false as const, error: ErrorType.NotFound, version: "v1" as const }));
     }
 
     const resp = await ctx.plaidClient.client.accountsGet({ access_token: item.accessToken });
@@ -279,11 +280,11 @@ v1Router.get("/integrations/plaid/accounts", async (req: Request, res: Response)
         resourceType: "plaid_item",
         resourceId: String(req.query.item_id ?? "n/a"),
         result: "failure",
-        reasonCode: "plaid_error",
+        reasonCode: ErrorType.PlaidError,
       });
     } catch {}
 
-    return res.status(500).json(withMeta(req, res, { ok: false as const, error: "internal_error" as const, version: "v1" as const }));
+    return res.status(500).json(withMeta(req, res, { ok: false as const, error: ErrorType.InternalError, version: "v1" as const }));
   }
 });
 
@@ -311,7 +312,7 @@ v1Router.get("/applications", async (req: Request, res: Response) => {
     );
   } catch (err: unknown) {
     ctx.logger?.error?.("GET /api/v1/applications failed", err);
-    return res.status(500).json(withMeta(req, res, { ok: false as const, error: "internal_error" as const, version: "v1" as const }));
+    return res.status(500).json(withMeta(req, res, { ok: false as const, error: ErrorType.InternalError, version: "v1" as const }));
   }
 });
 
@@ -323,7 +324,7 @@ v1Router.get("/applications/:id", async (req: Request, res: Response) => {
     const result = await getApplication(ctx, { applicationId });
 
     if (!result.ok) {
-      return res.status(404).json(withMeta(req, res, { ok: false as const, error: "not_found" as const, version: "v1" as const }));
+      return res.status(404).json(withMeta(req, res, { ok: false as const, error: ErrorType.NotFound, version: "v1" as const }));
     }
 
     ctx.logger?.info?.("application fetched", { applicationId });
@@ -331,6 +332,6 @@ v1Router.get("/applications/:id", async (req: Request, res: Response) => {
     return res.status(200).json(withMeta(req, res, { ok: true as const, application: result.application, version: "v1" as const }));
   } catch (err: unknown) {
     ctx.logger?.error?.("GET /api/v1/applications/:id failed", err);
-    return res.status(500).json(withMeta(req, res, { ok: false as const, error: "internal_error" as const, version: "v1" as const }));
+    return res.status(500).json(withMeta(req, res, { ok: false as const, error: ErrorType.InternalError, version: "v1" as const }));
   }
 });

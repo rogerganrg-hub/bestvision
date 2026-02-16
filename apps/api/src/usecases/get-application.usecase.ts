@@ -1,12 +1,8 @@
 // apps/api/src/usecases/get-application.usecase.ts
 import type { AppCtx } from "../ctx/app-ctx.js";
-import type { Application } from "@bestvision/contracts";
+import type { GetApplicationResult } from "@bestvision/contracts";
 
 export type GetApplicationInput = { applicationId: string };
-
-export type GetApplicationResult =
-  | { ok: true; application: Application }
-  | { ok: false; error: "not_found" };
 
 function asNonEmptyString(v: unknown): string | null {
   return typeof v === "string" && v.trim().length > 0 ? v.trim() : null;

@@ -1,12 +1,6 @@
 // apps/api/src/usecases/list-applications.usecase.ts
 import type { AppCtx } from "../ctx/app-ctx.js";
-import type { Application } from "@bestvision/contracts";
-
-export type ListApplicationsResult = {
-  ok: true;
-  items: Application[];
-  limit: number;
-};
+import type { ListApplicationsResult } from "@bestvision/contracts";
 
 function clampInt(v: unknown, opts: { min: number; max: number; fallback: number }): number {
   const n = typeof v === "string" ? Number(v) : typeof v === "number" ? v : NaN;
