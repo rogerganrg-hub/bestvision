@@ -2,7 +2,7 @@
 import crypto from "node:crypto";
 import type { AppCtx } from "../ctx/app-ctx.js";
 import type { AuditEvent } from "../audit/audit-event.js";
-import type { Application } from "../infra/repos/application-repo.contract.js";
+import type { Application } from "@bestvision/contracts";
 
 function utcNow(): string {
   return new Date().toISOString();

@@ -1,4 +1,4 @@
-// apps/api/src/audit/audit-context.js
+// apps/api/src/audit/audit-context.ts
 /**
  * @typedef {Object} Actor
  * @property {"user" | "system" | "integration"} type

@@ -1,6 +1,6 @@
 // apps/api/src/usecases/get-application.usecase.ts
 import type { AppCtx } from "../ctx/app-ctx.js";
-import type { Application } from "../infra/repos/application-repo.contract.js";
+import type { Application } from "@bestvision/contracts";
 
 export type GetApplicationInput = { applicationId: string };
 

@@ -11,8 +11,8 @@ import { SqlitePlaidItemRepo } from "../infra/repos/plaid-item-repo-sqlite.js";
 import { assemblePlaidIntegration } from "../integrations/plaid/index.js";
 import { createPlaidClient } from "../integrations/plaid/plaid-client.js";
 
-import type { ApplicationRepo } from "../infra/repos/application-repo.contract.js";
-import type { PlaidItemRepo } from "../infra/repos/plaid-item-repo.contract.js";
+import type { ApplicationRepo } from "@bestvision/contracts";
+import type { PlaidItemRepo } from "@bestvision/contracts";
 import type { AuditSink } from "../audit/audit-sink.js";
 
 import { AuditSafeSink } from "../audit/audit-safe-sink.js";

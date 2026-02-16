@@ -1,7 +1,7 @@
 // apps/api/src/infra/repos/application-repo-sqlite.ts
 import type Database from "better-sqlite3";
 import type { Statement } from "better-sqlite3";
-import type { Application, ApplicationRepo } from "./application-repo.contract.js";
+import type { Application, ApplicationRepo } from "@bestvision/contracts";
 
 type ApplicationRow = {
   application_id: string;

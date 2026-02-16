@@ -29,6 +29,7 @@
     "express": "^5.2.1",
     "plaid": "^41.0.0",
     "sqlite3": "^5.0.2",
-    "ts-morph": "^27.0.2"
+    "ts-morph": "^27.0.2",
+    "@bestvision/contracts": "workspace:*"
   }
 }

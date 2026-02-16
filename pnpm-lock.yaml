@@ -14,6 +14,9 @@ importers:
 
   apps/api:
     dependencies:
+      '@bestvision/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
       better-sqlite3:
         specifier: ^12.6.0
         version: 12.6.2
@@ -87,6 +90,12 @@ importers:
         version: 4.1.18
       typescript:
         specifier: ^5
+        version: 5.9.3
+
+  packages/contracts:
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
         version: 5.9.3
 
 packages:

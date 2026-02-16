@@ -1,7 +1,7 @@
 // apps/api/src/infra/repos/plaid-item-repo-sqlite.ts
 import type Database from "better-sqlite3";
 import type { Statement } from "better-sqlite3";
-import type { PlaidItem, PlaidItemRepo } from "./plaid-item-repo.contract.js";
+import type { PlaidItem, PlaidItemRepo } from "@bestvision/contracts";
 
 type PlaidItemRow = {
   item_id: string;
