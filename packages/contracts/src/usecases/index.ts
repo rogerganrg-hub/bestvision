@@ -7,3 +7,12 @@ export type {
     GetApplicationResult,
     ListApplicationsResult,
  } from "./application.js";
+
+export type {
+  SafeAccount,
+  PlaidLinkTokenResult,
+  PlaidExchangeResult,
+  PlaidAccountsResult,
+  PlaidStatusResult,
+  AccountBalances,
+} from "./plaid.js";

@@ -1,3 +1,4 @@
+// apps/web/src/app/integrations/plaid/page.tsx
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";

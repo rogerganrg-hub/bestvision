@@ -6,12 +6,6 @@ export type CreateApplicationInput = {
   email?: unknown;
 };
 
-export type CreateApplicationValidationError = {
-  ok: false;
-  error: "validation_error";
-  fields: { name?: "required"; email?: "required" };
-};
-
 export type CreateApplicationOk = {
   ok: true;
   applicationId: string;
@@ -19,14 +13,28 @@ export type CreateApplicationOk = {
   received: { name: string; email: string };
 };
 
+export type CreateApplicationValidationError = {
+  ok: false;
+  error: "validation_error" | "internal_error";
+  fields: { name?: "required"; email?: "required" };
+};
+
 export type CreateApplicationResult = CreateApplicationOk | CreateApplicationValidationError;
+
 
 export type GetApplicationResult =
   | { ok: true; application: Application }
-  | { ok: false; error: "not_found" };
+  | { ok: false; error: "not_found" | "internal_error" };
 
-export type ListApplicationsResult = {
+export type ListApplicationsOk = {
   ok: true;
   items: Application[];
   limit: number;
 };
+
+export type ListApplicationsInternalError = { 
+  ok: false; 
+  error: "internal_error"; 
+};
+
+export type ListApplicationsResult = ListApplicationsOk | ListApplicationsInternalError;

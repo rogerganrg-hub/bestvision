@@ -8,7 +8,7 @@ import type {
   CreateApplicationResult, 
   CreateApplicationValidationError, 
 } from "@bestvision/contracts";
-import { ErrorType } from "@bestvision/contracts";
+import type { ErrorCode } from "@bestvision/contracts";
 
 function utcNow(): string {
   return new Date().toISOString();
@@ -44,12 +44,12 @@ class CreateApplicationUseCaseImpl {
         resourceType: "application",
         resourceId: "n/a",
         result: "failure",
-        reasonCode: ErrorType.ValidationError,
+        reasonCode: "validation_error" as ErrorCode,
         meta: { fields },
       };
       await this.auditSink.write(ev);
 
-      return { ok: false, error: ErrorType.ValidationError, fields };
+      return { ok: false, error: "validation_error", fields };
     }
 
     const applicationId = crypto.randomUUID();
@@ -89,7 +89,7 @@ class CreateApplicationUseCaseImpl {
         resourceType: "application",
         resourceId: applicationId,
         result: "failure",
-        reasonCode: ErrorType.RepoError,
+        reasonCode: "repo_error" as ErrorCode,
       });
 
       throw e;

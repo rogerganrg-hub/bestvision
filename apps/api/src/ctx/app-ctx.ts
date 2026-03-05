@@ -17,6 +17,8 @@ import type { AuditSink } from "../audit/audit-sink.js";
 
 import { AuditSafeSink } from "../audit/audit-safe-sink.js";
 import { SqliteAuditSink } from "../audit/sqlite-audit-sink.js";
+import { AuthSessionCtx } from "./auth_session.js";
+import { TokenVaultPort } from "../types/ports/token_vault_port.js";
 
 
 export interface AppCtx {
@@ -27,6 +29,8 @@ export interface AppCtx {
 
   auditSink: AuditSink;
   actor: { type: "system" | "user"; id: string };
+  tokenVault: TokenVaultPort;
+  auth?: AuthSessionCtx;
 
   integrations: {
     plaid: { configured: boolean; envName: string };
@@ -127,13 +131,20 @@ export function createAppCtx(): AppCtx {
 
   const ctx: AppCtx = {
     requestId,
-    actor: { type: "system", id: "system" },
     clock: { nowIso: () => new Date().toISOString() },
     logger,
     build: { version: "v1", build: "dev" },
+    
     auditSink,
-    integrations: { plaid: { configured: plaid.configured, envName: plaid.envName } },
+    actor: { type: "system", id: "system" },
+    tokenVault: undefined as any, // 先占位，server.ts 里会覆盖成真正的实现
+
+    integrations: { 
+      plaid: { configured: plaid.configured, envName: plaid.envName } 
+    },
+    
     plaidClient,
+    
     repos: {
       application: new SqliteApplicationRepo(db),
       plaidItem: new SqlitePlaidItemRepo(db),
