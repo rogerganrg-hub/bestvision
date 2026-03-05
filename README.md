@@ -1,0 +1,15 @@
+# BestVision
+
+BestVision is a personal financial aggregation and analytics platform.
+
+## Features
+- Secure financial account aggregation via Plaid
+- Portfolio analytics
+- Risk monitoring
+- Compliance audit tools
+
+## Tech Stack
+- Next.js
+- TypeScript
+- Node.js
+- Plaid API
